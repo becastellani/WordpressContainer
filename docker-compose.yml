@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  wordpress:
+    image: wordpress:latest
+    restart: always
+    ports:
+      - "8000:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress_password
+      WORDPRESS_DB_NAME: wordpress
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./wp:/var/www/html
+    networks:
+      - wordpress_network
+
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./mysql:/docker-entrypoint-initdb.d
+    networks:
+      - wordpress_network
+
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '6379:6379'
+    restart: always
+    expose:
+      - '6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - wordpress_network
+
+  prometheus:
+    image: prom/prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks: 
+      - wordpress_network
+
+volumes:
+  wordpress_data:
+  db_data:
+  redis_data:
+
+networks:
+  wordpress_network:
+    driver: bridge
