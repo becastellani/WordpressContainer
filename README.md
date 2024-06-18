@@ -30,6 +30,9 @@ Antes de iniciarmos o projeto, é necessário liberarmos algumas métricas do Do
 
 **Depois de adicionado, reinicie o Docker para aplicar as alterações**
 
+**Para mais informações sobre a configuração do prometheus no Docker, você pode acessar:**
+- `https://github.com/becastellani/WordpressContainer.git`
+
 ---
 
 ## Passo a Passo
