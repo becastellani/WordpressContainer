@@ -27,6 +27,7 @@ services:
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress_password
       MYSQL_ROOT_PASSWORD: root_password
+      command: --pid-file=/var/lib/mysql/mysqld.pid
     volumes:
       - db_data:/var/lib/mysql
       - ./mysql:/docker-entrypoint-initdb.d
